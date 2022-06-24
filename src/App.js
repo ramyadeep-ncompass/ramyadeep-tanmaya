@@ -4,51 +4,47 @@ import FetchRepo from "./FetchRepo";
 import "./styles.css";
 
 function App() {
-  const [errorMessages, setErrorMessages] = useState({});
+  const [inputs, setInputs] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
-  const errors = {
-    uname: "invalid username",
-    pass: "invalid password"
-  };
-
+ 
+  const handleChange = (event) => {
+    const name = event.target.getAttribute('name');
+    const value = event.target.value;
+    const newinput = {...inputs};
+    newinput[name] = value;
+    setInputs(newinput);
+  } 
+ 
   const handleSubmit = async (event) => {
     
     event.preventDefault();
-    const res = await fetch('' ,{
+    const res = await fetch('https://reqres.in/api/login' ,{
       headers:{
         'Content-Type' : 'application/json'
       },
-      method : '' ,
+      method : 'POST' ,
       body: JSON.stringify({
-        user:inputs.user,
+        email:inputs.email,
         password:inputs.password,
       })
     });
     const temp = await res.json();
-    window.alert(temp.message);
-   
+    window.alert(temp.token);
+
+    setIsSubmitted(true)   
   };
-
-  // Generate JSX code for error message
-  const renderErrorMessage = (name) =>
-    name === errorMessages.name && (
-      <div className="error">{errorMessages.message}</div>
-    );
-
-  // JSX code for login form
   const renderForm = (
     <div className="form">
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Username </label>
-          <input type="text" name="uname" required />
-          {renderErrorMessage("uname")}
+          <input type="text" name="email" value={inputs.email || ""} onChange={handleChange} required />
+          
         </div>
         <div className="input-container">
           <label>Password </label>
-          <input type="password" name="pass" required />
-          {renderErrorMessage("pass")}
+          <input type="password" name="password" value={inputs.password || ""} onChange={handleChange} required />
+          
         </div>
         <div className="button-container">
           
