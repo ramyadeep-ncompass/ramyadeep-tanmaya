@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repo } from 'src/repo/repo.entity';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
@@ -8,6 +9,8 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
+        @InjectRepository(Repo)
+        private usersRepoRepository: Repository<Repo>,
     ) { }
 
     async getUserByEmail(email:string){
@@ -15,6 +18,6 @@ export class UserService {
     }
 
     async getUsersRepos() {
-        return 'Users repositories';
+        return await this.usersRepoRepository.find();
     }
 }
