@@ -54,6 +54,7 @@ input[type="submit"]:hover {
 .title {
   font-size:60px;
   margin-bottom: 20px;
+  margin-left: 20px;
 }
 
 .input-container {

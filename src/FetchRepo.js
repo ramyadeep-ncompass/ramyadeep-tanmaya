@@ -1,46 +1,54 @@
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-function FetchRepo () {
+function FetchRepo(props) {
 
-  const [userDetails, setUserDetails]  = useState([]);
-  const [status, setStatus]  = useState(false);
+  const token = props.token;
 
-	useEffect(() => {
-   
-		fetch("")
-			.then((res) => res.json())
-			.then((json) => {
-					setUserDetails(json) ;
-					setStatus(true);
-			});
-    },[]);
-		
-		if (!status) 
-    return <h2> Loading.... </h2> ;
+  const [userDetails, setUserDetails] = useState([]);
+  const [status, setStatus] = useState(false);
 
-		return (
-		  <div>
-              <table id="table1">
-                <tr>
-                    <th>User ID</th>
-                    <th>Repo Name</th>
-                    <th>No. of Contributors</th>
-                </tr>
-              </table>
+  useEffect(() => {
 
-              {
-				  userDetails.data.map((data) => (
-                          <table key = { data.S_ID }>
-                            <tr>
-                                <td>{data.id}</td>
-                                <td>{data.name}</td>
-                                <td>{data.contributors}</td>
-                            </tr>
+    async function test() {
+      const response = await fetch("http://localhost:3001/user/repositories", { headers: { "Authorization": "Bearer " + token } })
+      const result = await response.json();
 
-                          </table>
-				  ))
-			}
-		</div>
-	);
+      console.log(result)
+    }
+    test();
+  }, [token]);
+
+  if (!status)
+    return <h2> Loading.... </h2>;
+
+  return (
+    <div>
+      <table id="table1">
+        <tr>
+          <th>id</th>
+          <th>repositoryOwner</th>
+          <th>email</th>
+          <th>repositoryId</th>
+          <th>repositoryName</th>
+          <th>repositoryUrl</th>
+          <th>cloneUrl</th>
+          <th>contributorsUrl</th>
+        </tr>
+      </table>
+
+      {
+        userDetails.data.map((data) => (
+          <table key={data.S_ID}>
+            <tr>
+              <td>{data.id}</td>
+              <td>{data.name}</td>
+              <td>{data.contributors}</td>
+            </tr>
+
+          </table>
+        ))
+      }
+    </div>
+  );
 }
 export default FetchRepo;
