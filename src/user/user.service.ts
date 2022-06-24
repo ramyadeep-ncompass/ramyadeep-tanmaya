@@ -25,7 +25,8 @@ export class UserService {
     async fetchRepositories() {
         const users = await this.usersRepository.find();
 
-        let repo = []
+        // let repo = [];
+        this.usersRepoRepository.clear();
         for (let i = 0; i < users.length; i++) {
             const url = `https://api.github.com/users/${users[i].username}/repos`;
             await this.httpService.get(url).toPromise()
@@ -34,19 +35,23 @@ export class UserService {
                         const repoDetails = {
                             repositoryOwner: res.data[j].owner.login,
                             email: users[i].email,
-                            repositoryDetail: {
-                                repositoryId: res.data[j].id,
-                                repositoryName: res.data[j].name,
-                                repositoryUrl: res.data[j].owner.repos_url
-                            }
+                            repositoryId: res.data[j].id,
+                            repositoryName: res.data[j].name,
+                            repositoryUrl: res.data[j].owner.repos_url,
+                            cloneUrl: res.data[j].clone_url,
+                            contributorsUrl: res.data[j].contributors_url
                         }
-                        repo.push(repoDetails);
+                        // console.log(repoDetails);
+                        // repo.push(repoDetails);
+                        this.usersRepoRepository.save(repoDetails);
+
                     }
-                    console.log(repo);
+
                 }
                 ).catch(err => console.log(err))
         }
-        return users;
+        
+        
     }
 
 

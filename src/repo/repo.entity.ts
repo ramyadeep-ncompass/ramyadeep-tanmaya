@@ -6,9 +6,23 @@ export class Repo {
     id: number;
 
     @Column()
-    repoName: string;
+    repositoryOwner: string;
 
     @Column()
-    contribution: string;
+    email: string;
 
+    @Column()
+    repositoryId:number;
+
+    @Column()
+    repositoryName: string;
+
+    @Column()
+    repositoryUrl: string;
+
+    @Column()
+    cloneUrl: string;
+
+    @Column()
+    contributorsUrl: string;
 }
