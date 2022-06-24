@@ -36,6 +36,7 @@ import React, { useState } from "react";
 
     return (
         <div className="form">
+            <div className="title">Sign In</div>
             <form onSubmit={handleSubmit}>
                 <div className="input-container">
                     <label>Username </label>

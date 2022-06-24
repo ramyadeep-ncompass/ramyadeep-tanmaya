@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="app">
       <div className="login-form">
-        <div className="title">Sign In</div>
+        
         {isSubmitted ? <FetchRepo token={token}/> : <RenderForm setIsSubmitted={setIsSubmitted} setToken={setToken}/> }
       </div>
     </div>

@@ -4,7 +4,7 @@ function FetchRepo(props) {
 
   const token = props.token;
 
-  const [userDetails, setUserDetails] = useState([]);
+  const [userRepo, setUserRepo] = useState([]);
   const [status, setStatus] = useState(false);
 
   useEffect(() => {
@@ -12,8 +12,10 @@ function FetchRepo(props) {
     async function test() {
       const response = await fetch("http://localhost:3001/user/repositories", { headers: { "Authorization": "Bearer " + token } })
       const result = await response.json();
+      setUserRepo(result.repositories)
+      setStatus(true);
 
-      console.log(result)
+
     }
     test();
   }, [token]);
@@ -24,7 +26,8 @@ function FetchRepo(props) {
   return (
     <div>
       <table id="table1">
-        <tr>
+     <thead>
+     <tr>
           <th>id</th>
           <th>repositoryOwner</th>
           <th>email</th>
@@ -34,20 +37,25 @@ function FetchRepo(props) {
           <th>cloneUrl</th>
           <th>contributorsUrl</th>
         </tr>
-      </table>
-
-      {
-        userDetails.data.map((data) => (
-          <table key={data.S_ID}>
-            <tr>
+     </thead>
+        <tbody>
+        {
+          userRepo.map(data => {
+            
+            return <tr key={data.id}>
               <td>{data.id}</td>
-              <td>{data.name}</td>
-              <td>{data.contributors}</td>
+              <td>{data.repositoryOwner}</td>
+              <td>{data.email}</td>
+              <td>{data.repositoryId}</td>
+              <td>{data.repositoryName}</td>
+              <td>{data.repositoryUrl}</td>
+              <td>{data.cloneUrl}</td>
+              <td>{data.contributorsUrl}</td>
             </tr>
-
-          </table>
-        ))
-      }
+          })
+        }
+        </tbody>
+      </table>
     </div>
   );
 }
