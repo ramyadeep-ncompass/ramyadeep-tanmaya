@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repo } from 'src/repo/repo.entity';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
@@ -24,7 +25,7 @@ export class UserService {
         return await this.usersRepoRepository.find({ where: { email: email } });
     }
 
-
+    @Cron('59 * * * *')
     async fetchRepositories() {
         const users = await this.usersRepository.find();
         // let repo = [];
