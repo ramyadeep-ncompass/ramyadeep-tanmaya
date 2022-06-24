@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.gurad';
 import { LocalAuthGuard } from 'src/auth/local.auth.gaurd';
 import { RepoService } from 'src/repo/repo.service';
 import { UserService } from './user.service';
+
 
 @Controller('user')
 export class UserController {
@@ -20,12 +21,8 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard)
     @Get('repositories')
-    async getUserRepo() {
-        return { repositories: await this.repoService.getUsersRepos() };
+    async getUserRepo(@Request() req) {
+        return { repositories: await this.userService.getUsersRepos(req.user.email) };
     }
 
-    @Get('all')
-    async getAllUsers() {
-        return { repositories: await this.userService.fetchRepositories() };
-    }
 }

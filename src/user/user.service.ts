@@ -18,13 +18,15 @@ export class UserService {
         return await this.usersRepository.findOne({ where: { email: email } });
     }
 
-    async getUsersRepos() {
-        return await this.usersRepoRepository.find();
+
+    async getUsersRepos(email: string) {
+        console.log(email);
+        return await this.usersRepoRepository.find({ where: { email: email } });
     }
+
 
     async fetchRepositories() {
         const users = await this.usersRepository.find();
-
         // let repo = [];
         this.usersRepoRepository.clear();
         for (let i = 0; i < users.length; i++) {
@@ -44,16 +46,9 @@ export class UserService {
                         // console.log(repoDetails);
                         // repo.push(repoDetails);
                         this.usersRepoRepository.save(repoDetails);
-
                     }
-
                 }
                 ).catch(err => console.log(err))
         }
-        
-        
     }
-
-
-
 }
