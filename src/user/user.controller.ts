@@ -23,4 +23,9 @@ export class UserController {
     async getUserRepo() {
         return { repositories: await this.repoService.getUsersRepos() };
     }
+
+    @Get('all')
+    async getAllUsers() {
+        return { repositories: await this.userService.fetchRepositories() };
+    }
 }

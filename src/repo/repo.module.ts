@@ -7,7 +7,6 @@ import { RepoService } from "./repo.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Repo])],
-    // controllers: [UserController],
     providers: [RepoService],
     exports:[RepoService]
 })
