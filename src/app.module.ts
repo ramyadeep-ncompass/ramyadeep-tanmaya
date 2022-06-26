@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { Repo } from './repo/repo.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -21,7 +22,9 @@ import { JwtModule } from '@nestjs/jwt';
     synchronize: true,
   }),
     UserModule,
-    AuthModule,JwtModule
+    AuthModule,
+    JwtModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [AppController],
   providers: [AppService, AuthService],

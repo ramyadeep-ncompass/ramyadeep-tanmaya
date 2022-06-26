@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repo } from 'src/repo/repo.entity';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
@@ -21,14 +21,15 @@ export class UserService {
 
 
     async getUsersRepos(email: string) {
-        console.log(email);
-        return await this.usersRepoRepository.find({ where: { email: email } });
+        console.log(`logged in as ${email}`);
+        const userRepos = await this.usersRepoRepository.find({ where: { email: email } });
+        return userRepos;
     }
 
-    @Cron('59 * * * *')
+    @Cron(CronExpression.EVERY_HOUR)
     async fetchRepositories() {
+        console.log('Fetch repository api called');
         const users = await this.usersRepository.find();
-        // let repo = [];
         this.usersRepoRepository.clear();
         for (let i = 0; i < users.length; i++) {
             const url = `https://api.github.com/users/${users[i].username}/repos`;
@@ -44,12 +45,15 @@ export class UserService {
                             cloneUrl: res.data[j].clone_url,
                             contributorsUrl: res.data[j].contributors_url
                         }
-                        // console.log(repoDetails);
-                        // repo.push(repoDetails);
                         this.usersRepoRepository.save(repoDetails);
                     }
                 }
                 ).catch(err => console.log(err))
         }
     }
+
+    // @Cron('5 * * * * *')
+    // cronService(){
+    //     console.log('cron Services');
+    // }
 }
