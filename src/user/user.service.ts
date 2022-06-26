@@ -1,4 +1,4 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repo } from 'src/repo/repo.entity';
 import { Repository } from 'typeorm';
@@ -23,11 +23,25 @@ export class UserService {
     async getUsersRepos(email: string) {
         console.log(`logged in as ${email}`);
         const userRepos = await this.usersRepoRepository.find({ where: { email: email } });
-        return userRepos;
+
+        if(userRepos.length === 0 || !userRepos)
+            throw new NotFoundException('No Repositories are found!')
+
+
+        return {
+            success:true,
+            message: `${userRepos.length} Repositories fetched.`,
+            repositories: userRepos
+        };
     }
 
     @Cron(CronExpression.EVERY_HOUR)
     async fetchRepositories() {
+        const httpOptions = {
+            headers: {
+                'Authorization': 'Bearer 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'
+            }
+        }
         console.log('Fetch repository api called');
         const users = await this.usersRepository.find();
         this.usersRepoRepository.clear();
@@ -49,6 +63,10 @@ export class UserService {
                     }
                 }
                 ).catch(err => console.log(err))
+        }
+        return {
+            success: true,
+            message: "Fetch repository function called",
         }
     }
 

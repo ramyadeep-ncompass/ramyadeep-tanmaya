@@ -10,7 +10,8 @@ import { LocalStrategy } from './local.strategy';
 
 @Module({
   imports: [UserModule, PassportModule, JwtModule.register({
-      secretOrPrivateKey: 'jwtConstants.secret',
+      // secretOrPrivateKey: 'jwtConstants.secret',
+    secret: jwtConstants.secret,
     signOptions: { expiresIn: '1h' },
   }),],
   providers: [AuthService, LocalStrategy,JwtStrategy],
