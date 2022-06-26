@@ -8,17 +8,19 @@ import { UserController } from './user.controller';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { jwtConstants } from 'src/auth/jwt.constants';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, }),
     TypeOrmModule.forFeature([User, Repo]),
-    HttpModule,
     ScheduleModule.forRoot(),
     JwtModule.register({
-      secret: jwtConstants.secret,
+      secret: process.env.JWT_TOKEN,
       signOptions: { expiresIn: '1h' },
-    }),],
+    }),
+    HttpModule,
+  ],
   controllers: [UserController],
   providers: [UserService, RepoService, AuthService],
   exports: [UserService]

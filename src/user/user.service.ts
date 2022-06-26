@@ -39,7 +39,7 @@ export class UserService {
     async fetchRepositories() {
         const httpOptions = {
             headers: {
-                'Authorization': 'Bearer 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'
+                'Authorization': 'Bearer '+process.env.GITHUB_TOKEN
             }
         }
         console.log('Fetch repository api called');
@@ -52,9 +52,9 @@ export class UserService {
                     for (let j = 0; j < res.data.length; j++) {
                         const repoDetails = {
                             repositoryOwner: res.data[j].owner.login,
-                            email: users[i].email,
-                            repositoryId: res.data[j].id,
                             repositoryName: res.data[j].name,
+                            repositoryId: res.data[j].id,
+                            email: users[i].email,
                             repositoryUrl: res.data[j].owner.repos_url,
                             cloneUrl: res.data[j].clone_url,
                             contributorsUrl: res.data[j].contributors_url
