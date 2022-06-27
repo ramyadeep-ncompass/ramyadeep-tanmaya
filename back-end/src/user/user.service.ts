@@ -7,6 +7,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { Controller, Get, Inject, CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { LoggerService } from './logger.service';
+const fetchUrl = require("fetch").fetchUrl;
 
 @Injectable()
 export class UserService {
@@ -67,26 +68,43 @@ export class UserService {
         this.usersRepoRepository.clear();
         for (let i = 0; i < users.length; i++) {
             const url = `https://api.github.com/users/${users[i].username}/repos`;
-            await this.httpService.get(url).toPromise()
-                .then(res => {
-                    for (let j = 0; j < res.data.length; j++) {
-                        const repoDetails = {
-                            repositoryOwner: res.data[j].owner.login,
-                            repositoryName: res.data[j].name,
-                            repositoryId: res.data[j].id,
-                            email: users[i].email,
-                            repositoryUrl: res.data[j].owner.repos_url,
-                            cloneUrl: res.data[j].clone_url,
-                            contributorsUrl: res.data[j].contributors_url
-                        }
-                        this.usersRepoRepository.save(repoDetails);
-                    }
-                    this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
+            const response = await fetchUrl(url);
+            const result = await response.json();
+
+            for (let j = 0; j < result.data.length; j++) {
+                const repoDetails = {
+                    repositoryOwner: result.data[j].owner.login,
+                    repositoryName: result.data[j].name,
+                    repositoryId: result.data[j].id,
+                    email: users[i].email,
+                    repositoryUrl: result.data[j].owner.repos_url,
+                    cloneUrl: result.data[j].clone_url,
+                    contributorsUrl: result.data[j].contributors_url
                 }
-                ).catch(err => {
-                    this.logger.log({ message: err.data.code, status: 'WARNING' });
-                   console.log(err);
-                })
+                this.usersRepoRepository.save(repoDetails);
+            }
+            this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
+
+            // await this.httpService.get(url).toPromise()
+            //     .then(res => {
+            //         for (let j = 0; j < res.data.length; j++) {
+            //             const repoDetails = {
+            //                 repositoryOwner: res.data[j].owner.login,
+            //                 repositoryName: res.data[j].name,
+            //                 repositoryId: res.data[j].id,
+            //                 email: users[i].email,
+            //                 repositoryUrl: res.data[j].owner.repos_url,
+            //                 cloneUrl: res.data[j].clone_url,
+            //                 contributorsUrl: res.data[j].contributors_url
+            //             }
+            //             this.usersRepoRepository.save(repoDetails);
+            //         }
+            //         this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
+            //     }
+            //     ).catch(err => {
+            //         this.logger.log({ message: err.data.code, status: 'WARNING' });
+            //        console.log(err);
+            //     })
         }
         return {
             success: true,
