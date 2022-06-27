@@ -48,9 +48,9 @@ function FetchRepo(props) {
               <td>{data.email}</td>
               <td>{data.repositoryId}</td>
               <td>{data.repositoryName}</td>
-              <td>{data.repositoryUrl}</td>
-              <td>{data.cloneUrl}</td>
-              <td>{data.contributorsUrl}</td>
+              <td><a href={data.repositoryUrl}>{data.repositoryUrl}</a></td>
+              <td><a href={data.cloneUrl}>{data.cloneUrl}</a></td>
+              <td><a href={data.contributorsUrl}>{data.contributorsUrl}</a></td>
             </tr>
           })
         }
