@@ -24,3 +24,4 @@ This is the page for showing the Repository list.
 
 
 ![1](https://user-images.githubusercontent.com/105263598/175952047-53d55423-16af-4c59-a927-0f8c4bad9800.jpg)
+This is the Architecture Diagram.
