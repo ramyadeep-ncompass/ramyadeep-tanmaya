@@ -83,29 +83,8 @@ export class UserService {
                 }
                 this.usersRepoRepository.save(repoDetails);
             }
-            this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
-
-            // await this.httpService.get(url).toPromise()
-            //     .then(res => {
-            //         for (let j = 0; j < res.data.length; j++) {
-            //             const repoDetails = {
-            //                 repositoryOwner: res.data[j].owner.login,
-            //                 repositoryName: res.data[j].name,
-            //                 repositoryId: res.data[j].id,
-            //                 email: users[i].email,
-            //                 repositoryUrl: res.data[j].owner.repos_url,
-            //                 cloneUrl: res.data[j].clone_url,
-            //                 contributorsUrl: res.data[j].contributors_url
-            //             }
-            //             this.usersRepoRepository.save(repoDetails);
-            //         }
-            //         this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
-            //     }
-            //     ).catch(err => {
-            //         this.logger.log({ message: err.data.code, status: 'WARNING' });
-            //        console.log(err);
-            //     })
         }
+        this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
         return {
             success: true,
             message: "Fetch repository function called",
