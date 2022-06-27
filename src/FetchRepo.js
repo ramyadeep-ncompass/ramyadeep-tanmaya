@@ -10,7 +10,7 @@ function FetchRepo(props) {
   useEffect(() => {
 
     async function test() {
-      const response = await fetch("http://localhost:3001/user/repositories", { headers: { "Authorization": "Bearer " + token } })
+      const response = await fetch("http://52.65.9.30:5002/user/repositories", { headers: { "Authorization": "Bearer " + token } })
       const result = await response.json();
       setUserRepo(result.repositories)
       setStatus(true);
