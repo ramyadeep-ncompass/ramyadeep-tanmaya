@@ -27,9 +27,15 @@ import React, { useState } from "react";
             })
         });
         const temp = await res.json();
-        window.alert(temp.token);
+        //window.alert(temp.token);
+        if (res.status === 201) {
+            props.setIsSubmitted(true)
+        }
 
-        props.setIsSubmitted(true)
+        else {
+            alert("Enter Valid Username or Password")
+            alert (res.statusText)
+        }
 
         props.setToken(temp.token)
     };
