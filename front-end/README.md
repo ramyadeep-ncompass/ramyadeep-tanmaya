@@ -37,7 +37,8 @@ If you aren't satisfied with the build tool and configuration choices, you can `
 
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+You don't have to ever use `eject`. The curated fe![1](https://user-images.githubusercontent.com/105263598/175947786-d85b8738-a83a-4744-98e6-7895c590e6c2.jpg)
+ature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
 ## Learn More
 
@@ -68,3 +69,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+![login](https://user-images.githubusercontent.com/105263598/175947867-f16c02a8-adac-4cc0-9d86-c7e1212e40d6.jpg)
+This is the LOG-IN page.
+
+
+![repo list](https://user-images.githubusercontent.com/105263598/175948093-1d969bbb-c4f7-4713-8eee-0fd98b49f295.jpg)
+This is the page for showing the Repository list.
+
+
+![1](https://user-images.githubusercontent.com/105263598/175948174-6481b2a2-a9c2-4b85-aecb-fb5354939d0c.jpg)
+This is the Architecture Diagram of the project.
