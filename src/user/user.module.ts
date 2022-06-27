@@ -1,4 +1,4 @@
-import { CacheModule, HttpModule, Module } from '@nestjs/common';
+import {  HttpModule, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
@@ -9,7 +9,7 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
-import * as redisStore from 'cache-manager-redis-store';
+import { LoggerService } from './logger.service';
 
 @Module({
   imports: [
@@ -20,17 +20,10 @@ import * as redisStore from 'cache-manager-redis-store';
       secret: process.env.JWT_TOKEN,
       signOptions: { expiresIn: '1h' },
     }),
-    CacheModule.register({
-      store: redisStore,
-      socket: {
-        host: 'localhost',
-        port: 5003
-      }
-    }),
     HttpModule,
   ],
   controllers: [UserController],
-  providers: [UserService, RepoService, AuthService],
+  providers: [UserService, RepoService, AuthService,LoggerService],
   exports: [UserService]
 })
 export class UserModule { }

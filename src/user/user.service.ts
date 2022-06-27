@@ -1,4 +1,4 @@
-import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repo } from 'src/repo/repo.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { User } from './user.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Controller, Get, Inject, CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,7 @@ export class UserService {
         @InjectRepository(Repo)
         private usersRepoRepository: Repository<Repo>,
         private httpService: HttpService,
-        @Inject(CACHE_MANAGER) private cacheManager: Cache
+        private logger: LoggerService
     ) { }
 
     async getUserByEmail(email: string) {
@@ -25,23 +26,33 @@ export class UserService {
 
     async getUsersRepos(email: string) {
         console.log(`logged in as ${email}`);
+        // let source;
+        // const userRepos: [] = await this.cacheManager.get(email);
 
-        const userRepos:[] = await this.cacheManager.get(email);
+        // if (!userRepos) {
+        //     const currentRepos = await this.usersRepoRepository.find({ where: { email: email } });
+        //     await this.cacheManager.set(email, currentRepos, { ttl: 3600 });
+        //     source = 'database';
+        // }
+        // else
+        //     source = 'redis cache';
 
-        if (!userRepos) {
-            const currentRepos = await this.usersRepoRepository.find({ where: { email: email } });
-            await this.cacheManager.set(email, currentRepos, { ttl: 100000 });
-            console.log('Cache Miss');
-        }
-        console.log('Cache Hit');
+        // if (userRepos.length === 0)
+        //     throw new NotFoundException('No Repository found!');
 
-        if(userRepos.length === 0)
-            throw new NotFoundException('No Repository found!');
+        // return {
+        //     success: true,
+        //     message: ` Repositories fetched.`, //${userRepos.length}
+        //     repositories: userRepos,
+        //     source
+        // };
+
+        const userRepos = await this.usersRepoRepository.find({ where: { email: email } });
 
         return {
             success: true,
             message: ` Repositories fetched.`, //${userRepos.length}
-            repositories: userRepos
+            repositories: userRepos,
         };
     }
 
@@ -49,10 +60,9 @@ export class UserService {
     async fetchRepositories() {
         const httpOptions = {
             headers: {
-                'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN
+                'Authorization': 'token ' + process.env.GITHUB_TOKEN
             }
         }
-        console.log('Fetch repository api called');
         const users = await this.usersRepository.find();
         this.usersRepoRepository.clear();
         for (let i = 0; i < users.length; i++) {
@@ -71,17 +81,16 @@ export class UserService {
                         }
                         this.usersRepoRepository.save(repoDetails);
                     }
+                    this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
                 }
-                ).catch(err => console.log(err))
+                ).catch(err => {
+                    this.logger.log({ message: err.data.code, status: 'WARNING' });
+                   console.log(err);
+                })
         }
         return {
             success: true,
             message: "Fetch repository function called",
         }
     }
-
-    // @Cron('5 * * * * *')
-    // cronService(){
-    //     console.log('cron Services');
-    // }
 }

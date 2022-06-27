@@ -17,7 +17,7 @@ export class UserController {
 
 
     @UsePipes(ValidationPipe)
-    // @UseGuards(LocalAuthGuard)
+    @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Body() user: LoginUserDto) {
         return this.authService.login(user);
@@ -29,7 +29,7 @@ export class UserController {
         return await this.userService.getUsersRepos(req.user.email);
     }
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get('update-repositories')
     async updateUserRepo(@Request() req) {
         return await this.userService.fetchRepositories();

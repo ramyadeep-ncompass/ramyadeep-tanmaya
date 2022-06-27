@@ -71,3 +71,86 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+# Github Repository Tracker
+
+A nest js API to track all the repositories in a user's github profile
+
+
+
+## Acknowledgements
+
+ - [Nestjs Documentation](https://docs.nestjs.com/)
+
+
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+SERVER Credentials 
+
+`DB_USER `
+
+`DB_PASSWORD `
+
+`DB_HOST`
+
+`DB_DATABASE_NAME`
+`
+`SERVER_PORT`
+
+Access tokens
+
+`JWT_TOKEN` 
+
+`GITHUB_TOKEN`
+
+
+## API Reference
+
+#### Get all items
+
+```http
+  POST /user/login
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `email`   | `string` | **Required**.              |
+| `password`| `string` | **Required**.              |
+
+Returns a jwt token on succesful login
+
+#### Get item
+
+```http
+  GET /user/repositories
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `JWT token| `string` | **Required**.  |
+
+
+Returns all the repositories for the logged in user
+
+```http
+  GET /user/update-repositories
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `JWT token| `string` | **Required**.  |
+
+
+Updates all the repositories in the database
+
+
+## Authors
+
+- [@ramyadeep-ncompass](https://www.github.com/ramyadeep-ncompass)
+
+
