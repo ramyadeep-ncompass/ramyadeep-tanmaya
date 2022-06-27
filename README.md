@@ -99,7 +99,7 @@ SERVER Credentials
 `DB_HOST`
 
 `DB_DATABASE_NAME`
-`
+
 `SERVER_PORT`
 
 Access tokens
