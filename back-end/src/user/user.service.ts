@@ -68,21 +68,20 @@ export class UserService {
         this.usersRepoRepository.clear();
         for (let i = 0; i < users.length; i++) {
             const url = `https://api.github.com/users/${users[i].username}/repos`;
-            const response = await fetchUrl(url);
-            const result = await response.json();
-
-            for (let j = 0; j < result.data.length; j++) {
+            const response = await this.httpService.get(url).toPromise();
+            for (let j = 0; j < response.data.length; j++) {
                 const repoDetails = {
-                    repositoryOwner: result.data[j].owner.login,
-                    repositoryName: result.data[j].name,
-                    repositoryId: result.data[j].id,
+                    repositoryOwner: response.data[j].owner.login,
+                    repositoryName: response.data[j].name,
+                    repositoryId: response.data[j].id,
                     email: users[i].email,
-                    repositoryUrl: result.data[j].owner.repos_url,
-                    cloneUrl: result.data[j].clone_url,
-                    contributorsUrl: result.data[j].contributors_url
+                    repositoryUrl: response.data[j].owner.repos_url,
+                    cloneUrl: response.data[j].clone_url,
+                    contributorsUrl: response.data[j].contributors_url
                 }
                 this.usersRepoRepository.save(repoDetails);
             }
+
         }
         this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
         return {
