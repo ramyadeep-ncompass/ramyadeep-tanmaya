@@ -1,13 +1,12 @@
 import { BadRequestException, HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repo } from 'src/repo/repo.entity';
-import { Repository } from 'typeorm';
+import { Repository } from 'typeorm/repository/Repository';
 import { User } from './user.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Controller, Get, Inject, CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { LoggerService } from './logger.service';
-const fetchUrl = require("fetch").fetchUrl;
 
 @Injectable()
 export class UserService {
@@ -17,7 +16,9 @@ export class UserService {
         @InjectRepository(Repo)
         private usersRepoRepository: Repository<Repo>,
         private httpService: HttpService,
-        private logger: LoggerService
+        private logger: LoggerService,
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
     ) { }
 
     async getUserByEmail(email: string) {
@@ -27,34 +28,36 @@ export class UserService {
 
     async getUsersRepos(email: string) {
         console.log(`logged in as ${email}`);
-        // let source;
-        // const userRepos: [] = await this.cacheManager.get(email);
+        let source;
+        let userRepos: [] = await this.cacheManager.get(email);
+        let currentRepos;
 
-        // if (!userRepos) {
-        //     const currentRepos = await this.usersRepoRepository.find({ where: { email: email } });
-        //     await this.cacheManager.set(email, currentRepos, { ttl: 3600 });
-        //     source = 'database';
-        // }
-        // else
-        //     source = 'redis cache';
+        if (!userRepos) {
+            currentRepos = await this.usersRepoRepository.find({ where: { email: email } });
+            await this.cacheManager.set(email, currentRepos, { ttl: 3600 });
+            source = 'database';
+            userRepos = currentRepos;
+        }
+        else
+            source = 'redis cache';
 
         // if (userRepos.length === 0)
         //     throw new NotFoundException('No Repository found!');
-
-        // return {
-        //     success: true,
-        //     message: ` Repositories fetched.`, //${userRepos.length}
-        //     repositories: userRepos,
-        //     source
-        // };
-
-        const userRepos = await this.usersRepoRepository.find({ where: { email: email } });
 
         return {
             success: true,
             message: ` Repositories fetched.`, //${userRepos.length}
             repositories: userRepos,
+            source
         };
+
+        // const userRepos = await this.usersRepoRepository.find({ where: { email: email } });
+
+        // return {
+        //     success: true,
+        //     message: ` Repositories fetched.`, //${userRepos.length}
+        //     repositories: userRepos,
+        // };
     }
 
     @Cron(CronExpression.EVERY_HOUR)

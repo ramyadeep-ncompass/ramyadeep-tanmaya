@@ -1,4 +1,4 @@
-import {  Module } from '@nestjs/common';
+import {  CacheModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -10,6 +10,7 @@ import { Repo } from './repo/repo.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
+import * as redisStore from 'cache-manager-redis-store'
 
 @Module({
   imports: [
@@ -24,6 +25,13 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DB_DATABASE_NAME,
       entities: [User, Repo],
       synchronize: true,
+    }),
+    CacheModule.register({
+      store: redisStore,
+      socket: {
+        host: process.env.HOST,
+        port: 6379,
+      },
     }),
     UserModule,
     AuthModule,
