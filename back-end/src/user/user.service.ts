@@ -46,43 +46,43 @@ export class UserService {
             success: true,
             message: ` Repositories fetched.`, //${userRepos.length}
             repositories: userRepos,
-            lastUpdated: await this.cacheManager.get('last-updated');
+            lastUpdated: await this.cacheManager.get('last-updated'),
             source,
         };
     }
+    //Deprecated method
+    // @Cron(CronExpression.EVERY_HOUR)
+    // async fetchRepositories() {
+    //     const httpOptions = {
+    //         headers: {
+    //             'Authorization': 'token ' + process.env.GITHUB_TOKEN
+    //         }
+    //     }
+    //     const users = await this.usersRepository.find();
+    //     this.usersRepoRepository.clear();
+    //     for (let githubUser = 0; githubUser < users.length; githubUser++) {
+    //         const url = `https://api.github.com/users/${users[githubUser].username}/repos`;
+    //         const response = await this.httpService.get(url).toPromise();
+    //         for (let githubApiAttribute = 0; githubApiAttribute < response.data.length; githubApiAttribute++) {
+    //             const repoDetails = {
+    //                 repositoryOwner: response.data[githubApiAttribute].owner.login,
+    //                 repositoryName: response.data[githubApiAttribute].name,
+    //                 repositoryId: response.data[githubApiAttribute].id,
+    //                 email: users[githubUser].email,
+    //                 repositoryUrl: response.data[githubApiAttribute].owner.repos_url,
+    //                 cloneUrl: response.data[githubApiAttribute].clone_url,
+    //                 contributorsUrl: response.data[githubApiAttribute].contributors_url
+    //             }
+    //             this.usersRepoRepository.save(repoDetails);
+    //         }
 
-    @Cron(CronExpression.EVERY_HOUR)
-    async fetchRepositories() {
-        const httpOptions = {
-            headers: {
-                'Authorization': 'token ' + process.env.GITHUB_TOKEN
-            }
-        }
-        const users = await this.usersRepository.find();
-        this.usersRepoRepository.clear();
-        for (let githubUser = 0; githubUser < users.length; githubUser++) {
-            const url = `https://api.github.com/users/${users[githubUser].username}/repos`;
-            const response = await this.httpService.get(url).toPromise();
-            for (let githubApiAttribute = 0; githubApiAttribute < response.data.length; githubApiAttribute++) {
-                const repoDetails = {
-                    repositoryOwner: response.data[githubApiAttribute].owner.login,
-                    repositoryName: response.data[githubApiAttribute].name,
-                    repositoryId: response.data[githubApiAttribute].id,
-                    email: users[githubUser].email,
-                    repositoryUrl: response.data[githubApiAttribute].owner.repos_url,
-                    cloneUrl: response.data[githubApiAttribute].clone_url,
-                    contributorsUrl: response.data[githubApiAttribute].contributors_url
-                }
-                this.usersRepoRepository.save(repoDetails);
-            }
-
-        }
-        this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
-        const lastUpdated = new Date().toISOString();
-        await this.cacheManager.set('last-updated',lastUpdated , { ttl: 3600 });
-        return {
-            success: true,
-            message: "Fetch repository function called",
-        }
-    }
+    //     }
+    //     this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
+    //     const lastUpdated = new Date().toISOString();
+    //     await this.cacheManager.set('last-updated',lastUpdated , { ttl: 3600 });
+    //     return {
+    //         success: true,
+    //         message: "Fetch repository function called",
+    //     }
+    // }
 }
