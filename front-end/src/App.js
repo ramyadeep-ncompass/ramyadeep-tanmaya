@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import FetchRepo from "./FetchRepo";
-import RenderForm from "./components/renderForm";
+import FetchRepo from "./components/FetchRepo";
+import RenderForm from "./components/RenderForm";
+import { BrowserRouter as Router,Routes, Route, Link } from 'react-router-dom';
 import "./styles.css";
 
 function App() {
@@ -10,11 +11,22 @@ function App() {
   
   return (
     <div className="app">
-      <div className="login-form">
-        
-        {isSubmitted ? <FetchRepo token={token}/> : <RenderForm setIsSubmitted={setIsSubmitted} setToken={setToken}/> }
+      <div className="login-form">      
+       <Router>
+           <Routes>
+                 <Route exact path='/' element={< RenderForm setIsSubmitted={setIsSubmitted} setToken={setToken}/>}></Route>
+                 
+                 <Route exact path='/fetchrepo' element={<FetchRepo token={token}/>}></Route>               
+          </Routes>
+       </Router>
       </div>
     </div>
+    
+    // <div className="app">
+    //   <div className="login-form">      
+    //     {isSubmitted ? <FetchRepo token={token}/> : <RenderForm setIsSubmitted={setIsSubmitted} setToken={setToken}/> }
+    //   </div>
+    // </div>
   );
 }
 export default App;

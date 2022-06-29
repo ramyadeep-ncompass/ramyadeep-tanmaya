@@ -16,7 +16,7 @@ import React, { useState } from "react";
     const handleSubmit = async (event) => {
 
         event.preventDefault();
-        const res = await fetch('http://52.65.9.30:5002/user/login', {
+        const res = await fetch('http://localhost:3001/user/login', {
             headers: {
                 'Content-Type': 'application/json'
             },
