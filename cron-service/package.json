@@ -13,8 +13,8 @@
     "mysql2": "^2.3.3",
     "node-cron": "^3.0.1",
     "node-fetch": "^2.6.7",
-    "node-redis": "^0.1.7",
     "nodemon": "^2.0.18",
+    "redis": "^4.1.0",
     "uuid": "^8.3.2"
   }
 }

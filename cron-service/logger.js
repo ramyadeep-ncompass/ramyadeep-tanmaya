@@ -2,9 +2,7 @@ const fs = require('fs');
 const redis = require('redis');
 const client = redis.createClient();
 
-client.on('connect', function() {
-    console.log('Connected!');
-});
+
 
 async function logger(args) {
     const ts = new Date();
@@ -14,8 +12,13 @@ async function logger(args) {
         if (err)
             console.log(err);
     });
+
+    await client.connect();
+
     client.set('last-updated', args.timestamp);
     client.expire('last-updated', 3600);
+    client.disconnect();
+
 }
 
 module.exports = { logger }
