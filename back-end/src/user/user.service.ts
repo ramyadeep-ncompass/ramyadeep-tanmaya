@@ -1,7 +1,7 @@
 import { BadRequestException, HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repo } from 'src/repo/repo.entity';
-import { Repository } from 'typeorm/repository/Repository';
+import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Controller, Get, Inject, CACHE_MANAGER } from '@nestjs/common';
@@ -41,8 +41,6 @@ export class UserService {
         else
             source = 'redis cache';
 
-        // if (userRepos.length === 0)
-        //     throw new NotFoundException('No Repository found!');
 
         return {
             success: true,
@@ -50,14 +48,6 @@ export class UserService {
             repositories: userRepos,
             source
         };
-
-        // const userRepos = await this.usersRepoRepository.find({ where: { email: email } });
-
-        // return {
-        //     success: true,
-        //     message: ` Repositories fetched.`, //${userRepos.length}
-        //     repositories: userRepos,
-        // };
     }
 
     @Cron(CronExpression.EVERY_HOUR)
@@ -69,18 +59,18 @@ export class UserService {
         }
         const users = await this.usersRepository.find();
         this.usersRepoRepository.clear();
-        for (let i = 0; i < users.length; i++) {
-            const url = `https://api.github.com/users/${users[i].username}/repos`;
+        for (let githubUser = 0; githubUser < users.length; githubUser++) {
+            const url = `https://api.github.com/users/${users[githubUser].username}/repos`;
             const response = await this.httpService.get(url).toPromise();
-            for (let j = 0; j < response.data.length; j++) {
+            for (let githubApiAttribute = 0; githubApiAttribute < response.data.length; githubApiAttribute++) {
                 const repoDetails = {
-                    repositoryOwner: response.data[j].owner.login,
-                    repositoryName: response.data[j].name,
-                    repositoryId: response.data[j].id,
-                    email: users[i].email,
-                    repositoryUrl: response.data[j].owner.repos_url,
-                    cloneUrl: response.data[j].clone_url,
-                    contributorsUrl: response.data[j].contributors_url
+                    repositoryOwner: response.data[githubApiAttribute].owner.login,
+                    repositoryName: response.data[githubApiAttribute].name,
+                    repositoryId: response.data[githubApiAttribute].id,
+                    email: users[githubUser].email,
+                    repositoryUrl: response.data[githubApiAttribute].owner.repos_url,
+                    cloneUrl: response.data[githubApiAttribute].clone_url,
+                    contributorsUrl: response.data[githubApiAttribute].contributors_url
                 }
                 this.usersRepoRepository.save(repoDetails);
             }
