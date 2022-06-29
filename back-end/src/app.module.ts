@@ -30,7 +30,7 @@ import * as redisStore from 'cache-manager-redis-store'
       store: redisStore,
       socket: {
         host: process.env.HOST,
-        port: 6379,
+        port: process.env.REDIS_PORT,
       },
     }),
     UserModule,
