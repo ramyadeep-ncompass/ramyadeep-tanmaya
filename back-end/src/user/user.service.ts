@@ -46,7 +46,8 @@ export class UserService {
             success: true,
             message: ` Repositories fetched.`, //${userRepos.length}
             repositories: userRepos,
-            source
+            lastUpdated: await this.cacheManager.get('last-updated');
+            source,
         };
     }
 
@@ -77,6 +78,8 @@ export class UserService {
 
         }
         this.logger.log({ message: 'Fetch repository api called', status: 'INFO' });
+        const lastUpdated = new Date().toISOString();
+        await this.cacheManager.set('last-updated',lastUpdated , { ttl: 3600 });
         return {
             success: true,
             message: "Fetch repository function called",
